@@ -44,7 +44,9 @@ public class token {
         DIGIT_TOKEN,
         ERROR_TOKEN,
         EOF_TOKEN,
-        DEFAULT_TOKEN, NOT_TOKEN, INTEGER_TOKEN;
+        DEFAULT_TOKEN,
+        NOT_TOKEN,
+        INTEGER_TOKEN;
     }
 
     public enum State {
@@ -59,7 +61,8 @@ public class token {
         INNOT,
         INSLASH,
         INCOMMENTEND,
-        DONE
+        DONE,
+        INSTAR
 
     }
 
@@ -70,9 +73,10 @@ public class token {
     private static token tokenToPrint;
     private static Token_type tokenType;
     private static String tokenData;
+    private static boolean save = true;
     public static void main(String []args) {
-        String inFile = "./test_3.txt";
-        String outFile = "./out_test_3.txt";
+        String inFile = "./test_1.txt";
+        String outFile = "./out_test_1.txt";
 
         CMinusScanner(inFile, outFile);
     }
@@ -180,7 +184,6 @@ public class token {
         String tokenString = "";
         token currentToken = new token(Token_type.DEFAULT_TOKEN);
         State state = State.START;
-        boolean save;
 
         while (state != State.DONE){
             char c = getNextChar();
@@ -215,6 +218,10 @@ public class token {
                         state = State.INSLASH;
                         tokenString = tokenString.concat(Character.toString(c));
                     }
+                    else if(c == '*'){
+                        state = State.INSTAR;
+                        tokenString = tokenString.concat(Character.toString(c));
+                    }
                     else if(c == ' ' || c == '\t' || c == '\r' || c == '\n'){
                         state = State.DONE;
                         break;
@@ -234,10 +241,6 @@ public class token {
 
                             case '-':
                                 currentToken = new token(Token_type.MINUS_TOKEN);
-                                break;
-
-                            case '*':
-                                currentToken = new token(Token_type.MULTIPLY_TOKEN);
                                 break;
 
                             case ';':
@@ -381,24 +384,22 @@ public class token {
                         tokenString = "";
                     }
                     else {
-                        state = State.INCOMMENT;
+                        state = State.DONE;
                         currentToken = new token(Token_type.START_COMMENT_TOKEN);
-                        return currentToken;
-                    }
-
-                case INCOMMENT:
-                    if(c == '*'){
-                        state = State.INCOMMENTEND;
                     }
                     break;
 
-                case INCOMMENTEND:
-                    if(c == '/'){
+                case INSTAR:
+                    if(c != '/'){
                         state = State.DONE;
-                        currentToken = new token(Token_type.END_COMMENT_TOKEN);
+                        unGetNextChar();
+                        currentToken = new token(Token_type.MULTIPLY_TOKEN);
+                        tokenString = "";
                     }
                     else{
-                        state = State.INCOMMENT;
+                        save = true;
+                        state = State.DONE;
+                        currentToken = new token(Token_type.END_COMMENT_TOKEN);
                     }
                     break;
 
@@ -410,6 +411,14 @@ public class token {
                     break;
             }
         }
-        return currentToken;
+        if(save){
+            if(currentToken.getType() == Token_type.START_COMMENT_TOKEN){
+                save = false;
+            }
+            return currentToken;
+        }
+        else {
+            return new token(Token_type.DEFAULT_TOKEN);
+        }
     }
 }
