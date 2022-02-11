@@ -1,6 +1,5 @@
 package compiler;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +10,7 @@ import java.lang.Character;
 
 public class token {
     public enum Token_type {
+        ASSIGN_TOKEN,
         IF_TOKEN,
         ELSE_TOKEN,
         RETURN_TOKEN,
@@ -42,7 +42,7 @@ public class token {
         DIGIT_TOKEN,
         ERROR_TOKEN,
         EOF_TOKEN,
-        DEFAULT_TOKEN;
+        DEFAULT_TOKEN, NOT_TOKEN;
     }
 
     public enum State {
@@ -54,7 +54,7 @@ public class token {
         INEQUALS,
         INLESSTHAN,
         INGREATERTHAN,
-        INNOTEQUALS,
+        INNOT,
         INSLASH,
         INCOMMENTEND,
         DONE
@@ -68,6 +68,11 @@ public class token {
     private static token tokenToPrint;
     private static Token_type tokenType;
     private static String tokenData;
+    public static void main(String []args) {
+        String file = "./test.txt";
+
+        CMinusScanner(file);
+    }
 
     public static void CMinusScanner (String file) {
         try{
@@ -76,18 +81,29 @@ public class token {
             br = new BufferedReader(isr);
 
             nextToken = getToken();
+            System.out.print(nextToken.getType() + "\t");
+            if(nextToken.getData() != null){
+                System.out.println(nextToken.getData());
+            }
+            else{
+                System.out.println();
+            }
+
             while (nextToken.getType() != Token_type.EOF_TOKEN){
                 tokenToPrint = getNextToken();
                 if(tokenToPrint.getType() != Token_type.DEFAULT_TOKEN){
-                    System.out.println(tokenToPrint.getType() + " " + tokenData);
+                    System.out.print(tokenToPrint.getType() + "\t");
+                    if(tokenToPrint.getData() != null){
+                        System.out.println(tokenToPrint.getData());
+                    }
+                    else{
+                        System.out.println();
+                    }
                 }
             }
         }
         catch(FileNotFoundException e){
             System.out.println("File Not Found");
-        }
-        catch(IOException e){
-            System.out.println("IO Exception Raised From BufferedReader (.mark(1))");
         }
     }
 
@@ -98,7 +114,7 @@ public class token {
             return ret;
         }
         catch(IOException e){
-            System.out.println("IO Exception Raised From BufferedReader (br.read)");
+            System.out.println("IO Exception Raised From BufferedReader (br.read or br.mark)");
             return (char)-1;
         }
     }
@@ -172,16 +188,18 @@ public class token {
                         tokenString = tokenString.concat(Character.toString(c));
                     }
                     else if(c == '!'){
-                        state = State.INNOTEQUALS;
+                        state = State.INNOT;
                         tokenString = tokenString.concat(Character.toString(c));
                     }
                     else if(c == '/'){
                         state = State.INSLASH;
+                        tokenString = tokenString.concat(Character.toString(c));
                     }
-                    else if(c == ' ' || c == '\t' || c == '\n'){
+                    else if(c == ' ' || c == '\t' || c == '\r' || c == '\n'){
                         state = State.DONE;
                         break;
                     }
+                    
                     else{
                         state = State.DONE;
                         switch(c){
@@ -234,7 +252,7 @@ public class token {
                                 break;
                             
                             default:
-                                currentToken = new token(Token_type.ERROR_TOKEN);
+                                currentToken = new token(Token_type.ERROR_TOKEN, Character.toString(c));
                                 break;
                         }
                     }
@@ -257,7 +275,24 @@ public class token {
                     if((c < 65 || c > 90) && (c < 97 || c > 122)){
                         state = State.DONE;
                         unGetNextChar();
-                        currentToken = new token(Token_type.IDENTIFIER_TOKEN, tokenString);
+                        if(tokenString.equals("if")){
+                            currentToken = new token(Token_type.IF_TOKEN);
+                        }
+                        else if(tokenString.equals("else")){
+                            currentToken = new token(Token_type.ELSE_TOKEN);
+                        }
+                        else if(tokenString.equals("return")){
+                            currentToken = new token(Token_type.RETURN_TOKEN);
+                        }
+                        else if(tokenString.equals("void")){
+                            currentToken = new token(Token_type.VOID_TOKEN);
+                        }
+                        else if(tokenString.equals("while")){
+                            currentToken = new token(Token_type.WHILE_TOKEN);
+                        }
+                        else {
+                            currentToken = new token(Token_type.IDENTIFIER_TOKEN, tokenString);
+                        }
                         tokenString = "";
                     }
                     else{
@@ -266,25 +301,75 @@ public class token {
                     break;
                 
                 case INEQUALS:
-                    currentToken = new token(Token_type.ERROR_TOKEN, "ERROR");
+                    if(c != '='){
+                        state = State.DONE;
+                        unGetNextChar();
+                        currentToken = new token(Token_type.ASSIGN_TOKEN);
+                    }
+                    else{
+                        state = State.DONE;
+                        currentToken = new token(Token_type.EQUALITY_TOKEN);
+                    }
                     break;
 
                 case INLESSTHAN:
-                    currentToken = new token(Token_type.ERROR_TOKEN, "ERROR");
+                    if(c != '='){
+                        state = State.DONE;
+                        unGetNextChar();
+                        currentToken = new token(Token_type.LESS_THAN_TOKEN);
+                    }
+                    else{
+                        state = State.DONE;
+                        currentToken = new token(Token_type.LESS_THAN_OR_EQUAL_TOKEN);
+                    }
                     break;
                 
                 case INGREATERTHAN:
-                    currentToken = new token(Token_type.ERROR_TOKEN, "ERROR");
+                    if(c != '='){
+                        state = State.DONE;
+                        unGetNextChar();
+                        currentToken = new token(Token_type.GREATER_THAN_TOKEN);
+                    }
+                    else{
+                        state = State.DONE;
+                        currentToken = new token(Token_type.GREATER_THAN_OR_EQUAL_TOKEN);
+                    }
                     break;
                 
-                case INNOTEQUALS:
-                    currentToken = new token(Token_type.ERROR_TOKEN, "ERROR");
+                case INNOT:
+                    if(c != '='){
+                        state = State.DONE;
+                        unGetNextChar();
+                        currentToken = new token(Token_type.NOT_TOKEN);
+                    }
+                    else{
+                        state = State.DONE;
+                        currentToken = new token(Token_type.NONEQUALITY_TOKEN);
+                    }
                     break;
 
+                case INSLASH:
+                    if(c != '*'){
+                        state = State.DONE;
+                        unGetNextChar();
+                        currentToken = new token(Token_type.DIVIDE_TOKEN);
+                        tokenString = "";
+                    }
+                    else {
+                        state = State.INCOMMENT;
+                        currentToken = new token(Token_type.START_COMMENT_TOKEN);
+                    }
+
                 case INCOMMENT:
-                    currentToken = new token(Token_type.ERROR_TOKEN, "ERROR");
                     if(c == '*'){
                         state = State.INCOMMENTEND;
+                    }
+                    break;
+
+                case INCOMMENTEND:
+                    if(c == '/'){
+                        state = State.DONE;
+                        currentToken = new token(Token_type.END_COMMENT_TOKEN);
                     }
                     break;
 
