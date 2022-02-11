@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.lang.Character;
 
 public class token {
@@ -42,7 +44,7 @@ public class token {
         DIGIT_TOKEN,
         ERROR_TOKEN,
         EOF_TOKEN,
-        DEFAULT_TOKEN, NOT_TOKEN;
+        DEFAULT_TOKEN, NOT_TOKEN, INTEGER_TOKEN;
     }
 
     public enum State {
@@ -69,45 +71,61 @@ public class token {
     private static Token_type tokenType;
     private static String tokenData;
     public static void main(String []args) {
-        String file = "./test.txt";
+        String inFile = "./test_3.txt";
+        String outFile = "./out_test_3.txt";
 
-        CMinusScanner(file);
+        CMinusScanner(inFile, outFile);
     }
 
-    public static void CMinusScanner (String file) {
+    public static void CMinusScanner (String inFile, String outFile) {
+        //delcare buffered reader to take input from files
         try{
-            is = new FileInputStream(file);
+            is = new FileInputStream(inFile);
             isr = new InputStreamReader(is);
             br = new BufferedReader(isr);
 
+            File outFileFile = new File(outFile);
+            FileWriter writer = new FileWriter(outFileFile);
+
             nextToken = getToken();
-            System.out.print(nextToken.getType() + "\t");
+            writer.write(nextToken.getType() + "\t");
             if(nextToken.getData() != null){
-                System.out.println(nextToken.getData());
+                writer.write(nextToken.getData() + "\n");
             }
             else{
-                System.out.println();
+                writer.write("\n");
             }
 
+            //print tokens until end of file reached
             while (nextToken.getType() != Token_type.EOF_TOKEN){
                 tokenToPrint = getNextToken();
                 if(tokenToPrint.getType() != Token_type.DEFAULT_TOKEN){
-                    System.out.print(tokenToPrint.getType() + "\t");
+                    writer.write(tokenToPrint.getType() + "\t");
+                    if (tokenToPrint.getType() == Token_type.NUMBER_TOKEN) { writer.write("\t"); }
                     if(tokenToPrint.getData() != null){
-                        System.out.println(tokenToPrint.getData());
+                        writer.write(tokenToPrint.getData() + "\n");
                     }
                     else{
-                        System.out.println();
+                        writer.write("\n");
                     }
                 }
             }
+
+            is.close();
+            isr.close();
+            br.close();
+            writer.close();
         }
         catch(FileNotFoundException e){
             System.out.println("File Not Found");
         }
+        catch(IOException e){
+            System.out.println("IO Exception Raised From FileWriter");
+        }
     }
 
     public static char getNextChar(){
+        //fucntion to read in characters
         try{
             br.mark(1);
             char ret = (char)br.read();
@@ -120,6 +138,7 @@ public class token {
     }
 
     public static void unGetNextChar(){
+        //back up buffered reader to last marked spot
         try{
             br.reset();
         }
@@ -141,7 +160,7 @@ public class token {
         return this.tokenType;
     }
 
-    public Object getData(){
+    public String getData(){
         return this.tokenData;
     }
 
@@ -167,6 +186,7 @@ public class token {
             char c = getNextChar();
             switch (state) {
                 case START:
+                    //Multi-character tokens
                     if(Character.isDigit(c)){
                         state = State.INNUM;
                         tokenString = tokenString.concat(Character.toString(c));
@@ -201,6 +221,7 @@ public class token {
                     }
                     
                     else{
+                        //Single special symbols
                         state = State.DONE;
                         switch(c){
                             case (char)-1:
@@ -271,10 +292,11 @@ public class token {
                     break;
                     
                 case INID:
-                    // check ASCII codes
+                    // check ASCII codes to see if digit or not
                     if((c < 65 || c > 90) && (c < 97 || c > 122)){
                         state = State.DONE;
                         unGetNextChar();
+                        //Check for keyword
                         if(tokenString.equals("if")){
                             currentToken = new token(Token_type.IF_TOKEN);
                         }
@@ -289,6 +311,9 @@ public class token {
                         }
                         else if(tokenString.equals("while")){
                             currentToken = new token(Token_type.WHILE_TOKEN);
+                        }
+                        else if(tokenString.equals("int")){
+                            currentToken = new token(Token_type.INTEGER_TOKEN);
                         }
                         else {
                             currentToken = new token(Token_type.IDENTIFIER_TOKEN, tokenString);
@@ -337,14 +362,14 @@ public class token {
                     break;
                 
                 case INNOT:
-                    if(c != '='){
+                    if(c == '='){
                         state = State.DONE;
                         unGetNextChar();
-                        currentToken = new token(Token_type.NOT_TOKEN);
+                        currentToken = new token(Token_type.NONEQUALITY_TOKEN);
                     }
                     else{
                         state = State.DONE;
-                        currentToken = new token(Token_type.NONEQUALITY_TOKEN);
+                        currentToken = new token(Token_type.ERROR_TOKEN);
                     }
                     break;
 
@@ -358,6 +383,7 @@ public class token {
                     else {
                         state = State.INCOMMENT;
                         currentToken = new token(Token_type.START_COMMENT_TOKEN);
+                        return currentToken;
                     }
 
                 case INCOMMENT:
@@ -370,6 +396,9 @@ public class token {
                     if(c == '/'){
                         state = State.DONE;
                         currentToken = new token(Token_type.END_COMMENT_TOKEN);
+                    }
+                    else{
+                        state = State.INCOMMENT;
                     }
                     break;
 
