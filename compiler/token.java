@@ -66,91 +66,10 @@ public class token {
 
     }
 
-    private static InputStream is = null;
-    private static InputStreamReader isr = null;
-    private static BufferedReader br = null;
-    private static token nextToken;
-    private static token tokenToPrint;
     private static Token_type tokenType;
     private static String tokenData;
     private static boolean save = true;
-    public static void main(String []args) {
-        String inFile = "./test_1.txt";
-        String outFile = "./out_test_1.txt";
-
-        CMinusScanner(inFile, outFile);
-    }
-
-    public static void CMinusScanner (String inFile, String outFile) {
-        //delcare buffered reader to take input from files
-        try{
-            is = new FileInputStream(inFile);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            File outFileFile = new File(outFile);
-            FileWriter writer = new FileWriter(outFileFile);
-
-            nextToken = getToken();
-            writer.write(nextToken.getType() + "\t");
-            if(nextToken.getData() != null){
-                writer.write(nextToken.getData() + "\n");
-            }
-            else{
-                writer.write("\n");
-            }
-
-            //print tokens until end of file reached
-            while (nextToken.getType() != Token_type.EOF_TOKEN){
-                tokenToPrint = getNextToken();
-                if(tokenToPrint.getType() != Token_type.DEFAULT_TOKEN){
-                    writer.write(tokenToPrint.getType() + "\t");
-                    if (tokenToPrint.getType() == Token_type.NUMBER_TOKEN) { writer.write("\t"); }
-                    if(tokenToPrint.getData() != null){
-                        writer.write(tokenToPrint.getData() + "\n");
-                    }
-                    else{
-                        writer.write("\n");
-                    }
-                }
-            }
-
-            is.close();
-            isr.close();
-            br.close();
-            writer.close();
-        }
-        catch(FileNotFoundException e){
-            System.out.println("File Not Found");
-        }
-        catch(IOException e){
-            System.out.println("IO Exception Raised From FileWriter");
-        }
-    }
-
-    public static char getNextChar(){
-        //fucntion to read in characters
-        try{
-            br.mark(1);
-            char ret = (char)br.read();
-            return ret;
-        }
-        catch(IOException e){
-            System.out.println("IO Exception Raised From BufferedReader (br.read or br.mark)");
-            return (char)-1;
-        }
-    }
-
-    public static void unGetNextChar(){
-        //back up buffered reader to last marked spot
-        try{
-            br.reset();
-        }
-        catch(IOException e){
-            System.out.println("IO Exception Raised From BufferedReader (br.reset)");
-        }
-    }
-
+    
     public token (Token_type type){
         this(type, null);
     }
@@ -168,17 +87,6 @@ public class token {
         return this.tokenData;
     }
 
-    public static token viewNextToken () {
-        return nextToken;
-    }
-
-    public static token getNextToken () {
-        token returnToken = nextToken;
-        if (nextToken.getType() != Token_type.EOF_TOKEN)
-            nextToken = getToken();
-        return returnToken;
-    }
-
     public static token getToken(){
         int tokenStringIndex = 0;
         String tokenString = "";
@@ -186,7 +94,7 @@ public class token {
         State state = State.START;
 
         while (state != State.DONE){
-            char c = getNextChar();
+            char c = CMinusScanner.getNextChar();
             switch (state) {
                 case START:
                     //Multi-character tokens
@@ -285,7 +193,7 @@ public class token {
                 case INNUM:
                     if(c < 48 || c > 57){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.NUMBER_TOKEN, tokenString);
                         tokenString = "";
                     }
@@ -298,7 +206,7 @@ public class token {
                     // check ASCII codes to see if digit or not
                     if((c < 65 || c > 90) && (c < 97 || c > 122)){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         //Check for keyword
                         if(tokenString.equals("if")){
                             currentToken = new token(Token_type.IF_TOKEN);
@@ -331,7 +239,7 @@ public class token {
                 case INEQUALS:
                     if(c != '='){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.ASSIGN_TOKEN);
                     }
                     else{
@@ -343,7 +251,7 @@ public class token {
                 case INLESSTHAN:
                     if(c != '='){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.LESS_THAN_TOKEN);
                     }
                     else{
@@ -355,7 +263,7 @@ public class token {
                 case INGREATERTHAN:
                     if(c != '='){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.GREATER_THAN_TOKEN);
                     }
                     else{
@@ -367,7 +275,7 @@ public class token {
                 case INNOT:
                     if(c == '='){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.NONEQUALITY_TOKEN);
                     }
                     else{
@@ -379,7 +287,7 @@ public class token {
                 case INSLASH:
                     if(c != '*'){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.DIVIDE_TOKEN);
                         tokenString = "";
                     }
@@ -392,7 +300,7 @@ public class token {
                 case INSTAR:
                     if(c != '/'){
                         state = State.DONE;
-                        unGetNextChar();
+                        CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.MULTIPLY_TOKEN);
                         tokenString = "";
                     }
