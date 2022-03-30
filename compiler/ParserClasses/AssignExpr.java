@@ -1,6 +1,6 @@
 package compiler.ParserClasses;
 
 public class AssignExpr {
-    Expr lhs;
+    VarExpr var;
     Expr rhs;
 }
