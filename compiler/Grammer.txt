@@ -1,0 +1,69 @@
+program → declaration-list
+declaration-list →  declaration { declaration }
+declaration → void ID fundecl' | int ID declaration'
+declaration' → [ NUM ] ; | fundecl' | ;
+fundecl' → ( param ) compound-stmt
+params → param-list | void
+param-list → param { , param }
+param → INT ID [ [] ]
+compound-stmt → { local-declarations statement-list }
+local-declarations → { var-declaration }
+statement-list → { statement }
+statement → expression-stmt | compound-stmt | selection-stmt | iteration-stmt | return-stmt
+expression-stmt → [ expression ] ;
+selection-stmt → if ( expression ) statement [ else statement ]
+iteration-stmt → while ( expression ) statement
+return-stmt → return [ expression ] ;
+expression → ID expression' | NUM simple-expression' | ( expression ) simple-expression'
+expression' → = expression | [ expression ] expression'' | ( args ) simple-expression' | simple-expression' ( Follow set Factor )
+expression'' → expression | simple-expression' ( Follow set Factor ) 
+simple-expression' → additive-expression' [ relop additive-expression ]
+additive-expression → term { addop term } 
+additive-expression' → term' { addop term }
+term → factor { mulop factor }
+term' → { mulop factor }
+relop → <= | < | > | >= | == | !=
+addop → +|-
+mulop → * | /
+factor → ( expression ) | ID varcall | NUM
+var-call → ( args ) | [ expression ] | empty
+args → arg-list | empty
+arg-list → expression { , expression }
+
+
+
+
+
+// Expression parse function (From Slides)
+
+private Expression parseExpression () {
+    Expression lhs = parseTerm();
+    while (isAddop (currentToken.tokenType)) {
+        Token oldToken = advanceToken();
+        Expression rhs = parseTerm();
+            // make lhs the result, so set up for next iter
+        lhs = createBinopExpr (oldToken.tokenType, lhs, rhs);               
+    }
+    return lhs;
+}
+
+
+//If Statement parse function (From Slides)
+
+private Statement parseIfStmt () {
+    matchToken (Token.IF_TOKEN);
+    matchToken (Token.LPAREN_TOKEN);
+    Expression ifExpr = parseExpression();
+    matchToken(Token.RPAREN_TOKEN);
+    Statement thenStmt = parseStatement();
+    Statement elseStmt = null;    
+    if (currentToken.tokenType == Token.ELSE_TOKEN) {
+        AdvanceToken();
+        elseStmt = parseStatement();
+    }
+    Statement returnStmt = new IfStatement(ifExpr, thenStmt, elseStmt);
+    return returnStmt;
+}
+
+
+binary assign call id/var? num

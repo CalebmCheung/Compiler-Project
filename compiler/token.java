@@ -191,7 +191,7 @@ public class token {
                     break;
                     
                 case INNUM:
-                    if(c < 48 || c > 57){
+                    if(!Character.isDigit(c)){
                         state = State.DONE;
                         CMinusScanner.unGetNextChar();
                         currentToken = new token(Token_type.NUMBER_TOKEN, tokenString);
@@ -204,7 +204,7 @@ public class token {
                     
                 case INID:
                     // check ASCII codes to see if digit or not
-                    if((c < 65 || c > 90) && (c < 97 || c > 122)){
+                    if((c < 65 || c > 90) && (c <97 || c > 122)){
                         state = State.DONE;
                         CMinusScanner.unGetNextChar();
                         //Check for keyword
@@ -284,6 +284,10 @@ public class token {
                     }
                     break;
 
+
+
+
+
                 case INSLASH:
                     if(c != '*'){
                         state = State.DONE;
@@ -292,10 +296,14 @@ public class token {
                         tokenString = "";
                     }
                     else {
-                        state = State.DONE;
-                        currentToken = new token(Token_type.START_COMMENT_TOKEN);
+                        state = State.INCOMMENT;
+                        currentToken = new token(Token_type.DEFAULT_TOKEN);
                     }
                     break;
+
+
+
+
 
                 case INSTAR:
                     if(c != '/'){
@@ -307,9 +315,15 @@ public class token {
                     else{
                         save = true;
                         state = State.DONE;
-                        currentToken = new token(Token_type.END_COMMENT_TOKEN);
+                        currentToken = new token(Token_type.DEFAULT_TOKEN);
                     }
                     break;
+
+                case INCOMMENT:
+                    if(c == '*'){
+                        state = State.INSTAR;
+                        currentToken = new token(Token_type.DEFAULT_TOKEN);
+                    }
 
                 case DONE:
                     break;

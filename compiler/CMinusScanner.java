@@ -19,8 +19,9 @@ public class CMinusScanner {
     private static token tokenToPrint;
 
     public static void main(String []args) {
-        String inFile = "./test_3.txt";
-        String outFile = "./out_test_jflex_3.txt";
+        // test non flex scanner in progress
+        String inFile = "./test_2.txt";
+        String outFile = "./out_test_2.txt";
         CMinusJFlexScanner flexScanner; 
 
         try{
