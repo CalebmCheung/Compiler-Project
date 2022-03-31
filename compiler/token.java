@@ -66,9 +66,9 @@ public class token {
 
     }
 
-    private static Token_type tokenType;
-    private static String tokenData;
-    private static boolean save = true;
+    //
+    private Token_type tokenType;
+    private String tokenData;
     
     public token (Token_type type){
         this(type, null);
@@ -88,6 +88,7 @@ public class token {
     }
 
     public static token getToken(){
+        boolean save = true;
         int tokenStringIndex = 0;
         String tokenString = "";
         token currentToken = new token(Token_type.DEFAULT_TOKEN);

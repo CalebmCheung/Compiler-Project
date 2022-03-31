@@ -8,6 +8,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import compiler.token;
 
+// all parse methods should be static
 public class CMinusParser {
     token nextToken;
     token currenToken;
@@ -23,7 +24,7 @@ public class CMinusParser {
     
     private Program parseProgram(){
         Program p = new Program();
-
+        p.decList.add(parseDecl());
         while(nextToken.getType() != token.Token_type.EOF_TOKEN){
             p.decList.add(parseDecl());
         }
@@ -65,8 +66,12 @@ public class CMinusParser {
 
         // create param
         ArrayList<Param> params = new ArrayList<Param>();
+        // check to see if not void
+
+        
         while(nextToken.getType() != token.Token_type.CLOSE_PAREN_TOKEN){
             params.add(parseParam());
+
         }
         
         // match close paren
