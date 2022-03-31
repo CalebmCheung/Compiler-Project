@@ -87,6 +87,8 @@ public class token {
         return this.tokenData;
     }
 
+    
+
     public static token getToken(){
         boolean save = true;
         int tokenStringIndex = 0;

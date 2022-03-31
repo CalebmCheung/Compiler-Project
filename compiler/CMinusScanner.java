@@ -20,37 +20,69 @@ public class CMinusScanner {
     private static InputStream is = null;
     private static InputStreamReader isr = null;
     private static BufferedReader br = null;
-    private static token nextToken;
-    private static token tokenToPrint;
+    private token nextToken;
+    private token tokenToPrint;
+    private static File outFileFile;
+    private static FileWriter writer;
 
     public static void main(String []args) {
         // test non flex scanner in progress
         String inFile = "./compilerTests/test_2.txt";
         String outFile = "./compilerTests/out_test_2.txt";
 
-        ArrayList<token> program = CMinusScanner(inFile, outFile);
-        System.out.println(program.size());
-        System.out.println("------------------------------------------------------------------");
-        for(int i = 0; i < program.size(); i++){
-            System.out.println(program.get(i).getType());
-        }
+        CMinusScanner myScanner = new CMinusScanner(inFile, outFile);
+
+        // use to write to file
+        // myScanner.Scan();
+        // myScanner.Close();
     }
 
-    public static ArrayList<token> CMinusScanner (String inFile, String outFile) {
-        //delcare buffered reader to take input from files
-        ArrayList<token> ret = new ArrayList<token>();
+    public CMinusScanner (String inFile, String outFile) {
         try{
             is = new FileInputStream(inFile);
             isr = new InputStreamReader(is);
             br = new BufferedReader(isr);
 
-            File outFileFile = new File(outFile);
-            FileWriter writer = new FileWriter(outFileFile);
+            outFileFile = new File(outFile);
+            writer = new FileWriter(outFileFile);
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File Not Found");
+        }
+        catch(IOException e){
+            System.out.println("IO Exception Raised From FileWriter");
+        }
+    }
 
+    public CMinusScanner (String inFile) {
+        // will error if you try to run scan with this constructor
+        try{
+            is = new FileInputStream(inFile);
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File Not Found");
+        }
+    }
+
+    public void Close(){
+        try{
+            is.close();
+            isr.close();
+            br.close();
+            writer.close();
+        }
+        catch(IOException e){
+            System.out.println("IO Exception Raised From Closing");
+        }
+    }
+
+    public void Scan(){
+        try{
             nextToken = token.getToken();
             if(nextToken.getType() != token.Token_type.DEFAULT_TOKEN){
                 writer.write(nextToken.getType() + "\t");
-                ret.add(new token(nextToken.getType(), nextToken.getData()));
                 if(nextToken.getData() != null){
                     writer.write(nextToken.getData() + "\n");
                 }
@@ -64,10 +96,6 @@ public class CMinusScanner {
                 tokenToPrint = getNextToken();
                 if(tokenToPrint.getType() != token.Token_type.DEFAULT_TOKEN){
                     writer.write(tokenToPrint.getType() + "\t");
-                    System.out.println(tokenToPrint.getType());
-                    Token_type temptype = tokenToPrint.getType();
-                    String tempdata = tokenToPrint.getData();
-                    ret.add(new token(temptype, tempdata));
                     if(tokenToPrint.getType() == token.Token_type.NUMBER_TOKEN) { writer.write("\t"); }
                     if(tokenToPrint.getData() != null){
                         writer.write(tokenToPrint.getData() + "\n");
@@ -77,11 +105,6 @@ public class CMinusScanner {
                     }
                 }
             }
-
-            is.close();
-            isr.close();
-            br.close();
-            writer.close();
         }
         catch(FileNotFoundException e){
             System.out.println("File Not Found");
@@ -89,12 +112,6 @@ public class CMinusScanner {
         catch(IOException e){
             System.out.println("IO Exception Raised From FileWriter");
         }
-        
-        System.out.println("------------------------------------------------------------------");
-        for(int i = 0; i < ret.size(); i++){
-            System.out.println(ret.get(i).getType());
-        }
-        return ret;
     }
 
     public static char getNextChar(){
@@ -120,11 +137,11 @@ public class CMinusScanner {
         }
     }
 
-    public static token viewNextToken () {
+    public token viewNextToken () {
         return nextToken;
     }
 
-    public static token getNextToken () {
+    public token getNextToken () {
         token returnToken = nextToken;
         if (nextToken.getType() != token.Token_type.EOF_TOKEN)
             nextToken = token.getToken();
