@@ -2,10 +2,10 @@ program → declaration-list
 declaration-list →  declaration { declaration }
 declaration → void ID fundecl' | int ID declaration'
 declaration' → [ NUM ] ; | fundecl' | ;
-fundecl' → ( param ) compound-stmt
+fundecl' → ( params ) compound-stmt
 params → param-list | void
 param-list → param { , param }
-param → INT ID [ [] ]
+param → int ID [ [] ]
 compound-stmt → { local-declarations statement-list }
 local-declarations → { var-declaration }
 statement-list → { statement }
