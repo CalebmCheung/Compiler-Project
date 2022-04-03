@@ -25,7 +25,7 @@ term' → { mulop factor }
 relop → <= | < | > | >= | == | !=
 addop → +|-
 mulop → * | /
-factor → ( expression ) | ID varcall | NUM
+factor → ( expression ) | ID var-call | NUM
 var-call → ( args ) | [ expression ] | empty
 args → arg-list | empty
 arg-list → expression { , expression }

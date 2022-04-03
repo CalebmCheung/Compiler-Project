@@ -1,12 +1,11 @@
 package compiler.ParserClasses;
 
-import java.beans.Statement;
-
 public class iterationStatement extends Statement {
-    public iterationStatement(Object target, String methodName, Object[] arguments) {
-        super(target, methodName, arguments);
-        //TODO Auto-generated constructor stub
+    public Expr expr;
+    public Statement stmt;
+    public iterationStatement(Expr exp, Statement stm) {
+        expr = exp;
+        stmt = stm;
     }
-    Expr expr;
-    Statement stmt;
+    
 }

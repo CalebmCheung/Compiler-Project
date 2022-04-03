@@ -8,9 +8,9 @@ public class FunDecl extends Decl{
     public String ID;
     public Token_type type;
     public ArrayList<Param> params;
-    public compoundStatement cmpd_stmt;
+    public ArrayList<compoundStatement> cmpd_stmt;
 
-    public FunDecl(String id, Token_type t, ArrayList<Param> p, compoundStatement c){
+    public FunDecl(String id, Token_type t, ArrayList<Param> p, ArrayList<compoundStatement> c){
         ID = id;
         type = t;
         params = p;

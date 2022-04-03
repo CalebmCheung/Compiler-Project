@@ -1,5 +1,5 @@
 package compiler.ParserClasses;
 
-abstract class Statement {
+public abstract class Statement {
     
 }
