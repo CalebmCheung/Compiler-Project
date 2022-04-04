@@ -6,6 +6,11 @@ public class exprStatement extends Statement {
     public exprStatement(Expr e){
         expr = e;
     }
+
+    public void print(){
+        expr.print();
+        System.out.println(";");
+    }
 }
 
     

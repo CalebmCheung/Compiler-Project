@@ -14,4 +14,11 @@ public class VarDecl extends Decl {
         has_brackets = b;
         number = n;
     }
+
+    public void print(){
+        System.out.print(type + " " + ID);
+        if(has_brackets){
+            System.out.print("[" + number + "]");
+        }
+    }
 }

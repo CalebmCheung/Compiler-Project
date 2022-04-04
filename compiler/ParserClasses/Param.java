@@ -8,4 +8,11 @@ public class Param {
         ID = s;
         has_brackets = b;
     }
+
+    public void print(){
+        System.out.print(ID);
+        if(has_brackets){
+            System.out.print("[]");
+        }
+    }
 }

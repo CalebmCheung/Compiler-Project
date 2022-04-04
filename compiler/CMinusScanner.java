@@ -8,12 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.lang.Character;
-import java.util.ArrayList;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
-
-import compiler.token.Token_type;
 
 public class CMinusScanner {
 

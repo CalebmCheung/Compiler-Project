@@ -1,7 +1,9 @@
 package compiler.ParserClasses;
 
-public class BinaryExpr {
-    public operator type; 
+import compiler.token.Token_type;
+
+public class BinaryExpr extends Expr{
+    public Token_type type; 
     public Expr lhs;
     public Expr rhs;
 
@@ -10,5 +12,17 @@ public class BinaryExpr {
         MINUS,
         DIVIDE,
         MULTIPLY,
+    }
+
+    public BinaryExpr(Expr left, Expr right, Token_type op){
+        lhs = left;
+        rhs = right;
+        type = op;
+    }
+
+    public void print(){
+        lhs.print();
+        System.out.print(type);
+        rhs.print();
     }
 }

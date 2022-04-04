@@ -1,7 +1,5 @@
 package compiler.ParserClasses;
 
-import compiler.token.State;
-
 public class selectionStatement extends Statement {
 	public Expr expr;
     public Statement stmt;
@@ -11,5 +9,16 @@ public class selectionStatement extends Statement {
 		expr = e;
 		stmt = s;
 		else_stmt = es;
+	}
+
+	public void print(){
+		System.out.print("if ( ");
+		expr.print();
+		System.out.print(" )\n\t");
+		stmt.print();
+		if(else_stmt != null){
+			System.out.print("else\n\t");
+			else_stmt.print();
+		}
 	}
 }
