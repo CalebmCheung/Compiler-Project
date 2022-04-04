@@ -16,7 +16,7 @@ iteration-stmt → while ( expression ) statement
 return-stmt → return [ expression ] ;
 expression → ID expression' | NUM simple-expression' | ( expression ) simple-expression'
 expression' → = expression | [ expression ] expression'' | ( args ) simple-expression' | simple-expression' ( Follow set Factor )
-expression'' → expression | simple-expression' ( Follow set Factor ) 
+expression'' → = expression | simple-expression' ( Follow set Factor ) 
 simple-expression' → additive-expression' [ relop additive-expression ]
 additive-expression → term { addop term } 
 additive-expression' → term' { addop term }
