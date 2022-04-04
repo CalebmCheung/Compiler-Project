@@ -13,9 +13,11 @@ public class CallExpr extends Expr{
 
     public void print(){
         System.out.print(ID + "( ");
-        for(int i = 0; i < args.size(); i++){
-            args.get(i).print();
-            System.out.print(", ");
+        if(args != null){
+            for(int i = 0; i < args.size(); i++){
+                args.get(i).print();
+                System.out.print(", ");
+            }
         }
         System.out.println(")");
     }

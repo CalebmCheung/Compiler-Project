@@ -1,4 +1,4 @@
-int fact( char x )
+int fact( int x )
 /* recursive factorial function */
 { if (x > 1)
     return x * fact(x - 1);

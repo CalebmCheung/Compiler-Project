@@ -10,7 +10,8 @@ public class AssignExpr extends Expr{
     }
 
     public void print(){
-        System.out.print(var + " = ");
+        var.print();
+        System.out.print(" = ");
         rhs.print();
     }
 }

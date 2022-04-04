@@ -125,6 +125,7 @@ public class token {
                         tokenString = tokenString.concat(Character.toString(c));
                     }
                     else if(c == ' ' || c == '\t' || c == '\r' || c == '\n'){
+                        save = false;
                         state = State.DONE;
                         break;
                     }

@@ -12,11 +12,15 @@ public class compoundStatement extends Statement {
     }
 
     public void print(){
-        for(int i = 0; i < local_decls.size(); i++){
-            local_decls.get(i).print();
+        if(local_decls.size() > 0){
+            for(int i = 0; i < local_decls.size(); i++){
+                local_decls.get(i).print();
+            }
         }
-        for(int i = 0; i < stmt_list.size(); i++){
-            stmt_list.get(i).print();
+        if(stmt_list.size() > 0){
+            for(int i = 0; i < stmt_list.size(); i++){
+                stmt_list.get(i).print();
+            }
         }
     }
 }

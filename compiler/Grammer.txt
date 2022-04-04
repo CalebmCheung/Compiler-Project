@@ -31,6 +31,9 @@ args → arg-list | empty
 arg-list → expression { , expression }
 
 
+follow-set factor { mulop, addop, <=, <, >, >=, ==, !=, (, ) , ID, NUM }
+
+
 
 
 
