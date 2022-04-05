@@ -312,13 +312,7 @@ public class CMinusParser {
                 advanceToken();
                 VarExpr vExpr = new VarExpr(ID, null);
                 Expr rhs;
-                if(nextToken.getType() != token.Token_type.SEMI_COLON_TOKEN){
-                    rhs = parseExpression();
-                }
-                else {
-                    advanceToken();
-                    rhs = new VarExpr(ID, null);
-                }
+                rhs = parseExpression();
                 return new AssignExpr(vExpr, rhs);
             } else if (currentToken.getType() == token.Token_type.OPEN_BRACKET_TOKEN) {
                 advanceToken();
@@ -344,7 +338,10 @@ public class CMinusParser {
                     || currentToken.getType() == token.Token_type.MULTIPLY_TOKEN
                     || currentToken.getType() == token.Token_type.DIVIDE_TOKEN
                     || currentToken.getType() == token.Token_type.PLUS_TOKEN
-                    || currentToken.getType() == token.Token_type.MINUS_TOKEN) {
+                    || currentToken.getType() == token.Token_type.MINUS_TOKEN
+                    || currentToken.getType() == token.Token_type.SEMI_COLON_TOKEN
+                    || currentToken.getType() == token.Token_type.COMMA_TOKEN
+                    || currentToken.getType() == token.Token_type.CLOSE_BRACKET_TOKEN){
                 VarExpr vExpr = new VarExpr(ID, null);
                 return parseSimpleExpressionPrime(vExpr);
             }
@@ -371,7 +368,10 @@ public class CMinusParser {
                 || currentToken.getType() == token.Token_type.MULTIPLY_TOKEN
                 || currentToken.getType() == token.Token_type.DIVIDE_TOKEN
                 || currentToken.getType() == token.Token_type.PLUS_TOKEN
-                || currentToken.getType() == token.Token_type.MINUS_TOKEN) {
+                || currentToken.getType() == token.Token_type.MINUS_TOKEN
+                || currentToken.getType() == token.Token_type.SEMI_COLON_TOKEN
+                || currentToken.getType() == token.Token_type.COMMA_TOKEN
+                || currentToken.getType() == token.Token_type.CLOSE_BRACKET_TOKEN) {
             return parseSimpleExpressionPrime(vExpr);
         } else {
             throw new parserErrorException("bad token in parseExpressionPrimePrime");
@@ -494,6 +494,7 @@ public class CMinusParser {
                 matchToken(token.Token_type.CLOSE_BRACKET_TOKEN);
                 return new VarExpr(ID, expr);
             } else {
+                //Check for follow set of factor and return varExpr
                 throw new parserErrorException("Error in parseVarCall");
             }
         } catch (matchTokenException e) {
