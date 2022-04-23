@@ -9,10 +9,11 @@ public class Program {
         decList = new ArrayList<Decl>();
     }
 
-    public void print(){
-        System.out.println("program");
+    public void print(String indent){
+        System.out.println(indent + "program");
         for(int i = 0; i < decList.size(); i++){
-            decList.get(i).print();
+            decList.get(i).print(indent + "    ");
+            System.out.println();
         }
     }
 }

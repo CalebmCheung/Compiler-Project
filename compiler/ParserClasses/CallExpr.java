@@ -11,14 +11,16 @@ public class CallExpr extends Expr{
         args = a;
     }
 
-    public void print(){
-        System.out.print(ID + "( ");
+    public void print(String indent){
+        System.out.print(indent + ID + "( ");
         if(args != null){
             for(int i = 0; i < args.size(); i++){
-                args.get(i).print();
-                System.out.print(", ");
+                args.get(i).print("");
+                if(i < args.size()-1){
+                    System.out.print(", ");
+                }
             }
         }
-        System.out.println(")");
+        System.out.println(indent + ");");
     }
 }

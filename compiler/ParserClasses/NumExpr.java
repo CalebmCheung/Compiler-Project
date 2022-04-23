@@ -7,7 +7,7 @@ public class NumExpr extends Expr{
         val = n;
     }
 
-    public void print(){
-        System.out.println(val);
+    public void print(String indent){
+        System.out.print(val);
     }
 }

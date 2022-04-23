@@ -9,9 +9,10 @@ public class AssignExpr extends Expr{
         rhs = e;
     }
 
-    public void print(){
-        var.print();
+    public void print(String indent){
+        var.print(indent + "    ");
         System.out.print(" = ");
-        rhs.print();
+        rhs.print("");
+        System.out.println();
     }
 }

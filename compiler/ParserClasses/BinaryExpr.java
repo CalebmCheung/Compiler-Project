@@ -20,9 +20,9 @@ public class BinaryExpr extends Expr{
         type = op;
     }
 
-    public void print(){
-        lhs.print();
-        System.out.print(type);
-        rhs.print();
+    public void print(String indent){
+        lhs.print(indent);
+        System.out.print(" " + type + " ");
+        rhs.print("");
     }
 }

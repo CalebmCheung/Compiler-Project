@@ -15,10 +15,11 @@ public class VarDecl extends Decl {
         number = n;
     }
 
-    public void print(){
-        System.out.print(type + " " + ID);
+    public void print(String indent){
+        System.out.print(indent + type + " " + ID);
         if(has_brackets){
-            System.out.print("[" + number + "]");
+            System.out.print( "[" + number + "]");
         }
+        System.out.println();
     }
 }

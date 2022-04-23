@@ -7,9 +7,9 @@ public class returnStatement extends Statement {
         expr = e;
     }
 
-    public void print(){
-        System.out.print("return ");
-        expr.print();
+    public void print(String indent){
+        System.out.print(indent + "return ");
+        expr.print("");
         System.out.println(";");
     }
 }

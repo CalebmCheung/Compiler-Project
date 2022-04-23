@@ -31,42 +31,5 @@ args → arg-list | empty
 arg-list → expression { , expression }
 
 
-follow-set factor { mulop, addop, <=, <, >, >=, ==, !=, (, ) , ID, NUM }
+follow-set factor { mulop, addop, <=, <, >, >=, ==, !=, (, ) , ID, NUM , ; , comma, ] }
 
-
-
-
-
-// Expression parse function (From Slides)
-
-private Expression parseExpression () {
-    Expression lhs = parseTerm();
-    while (isAddop (currentToken.tokenType)) {
-        Token oldToken = advanceToken();
-        Expression rhs = parseTerm();
-            // make lhs the result, so set up for next iter
-        lhs = createBinopExpr (oldToken.tokenType, lhs, rhs);               
-    }
-    return lhs;
-}
-
-
-//If Statement parse function (From Slides)
-
-private Statement parseIfStmt () {
-    matchToken (Token.IF_TOKEN);
-    matchToken (Token.LPAREN_TOKEN);
-    Expression ifExpr = parseExpression();
-    matchToken(Token.RPAREN_TOKEN);
-    Statement thenStmt = parseStatement();
-    Statement elseStmt = null;    
-    if (currentToken.tokenType == Token.ELSE_TOKEN) {
-        AdvanceToken();
-        elseStmt = parseStatement();
-    }
-    Statement returnStmt = new IfStatement(ifExpr, thenStmt, elseStmt);
-    return returnStmt;
-}
-
-
-binary assign call id/var? num

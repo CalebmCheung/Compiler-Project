@@ -8,10 +8,10 @@ public class iterationStatement extends Statement {
         stmt = stm;
     }
     
-    public void print(){
-        System.out.print("While (" );
-        expr.print();
-        System.out.print(") ");
-        stmt.print();
+    public void print(String indent){
+        System.out.print(indent + "While (" );
+        expr.print("");
+        System.out.println(") ");
+        stmt.print(indent + "    ");
     }
 }

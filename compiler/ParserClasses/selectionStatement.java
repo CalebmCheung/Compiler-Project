@@ -11,14 +11,14 @@ public class selectionStatement extends Statement {
 		else_stmt = es;
 	}
 
-	public void print(){
-		System.out.print("if ( ");
-		expr.print();
-		System.out.print(" )\n\t");
-		stmt.print();
+	public void print(String indent){
+		System.out.print(indent + "if ( ");
+		expr.print("");
+		System.out.println(" )");
+		stmt.print(indent + "    ");
 		if(else_stmt != null){
-			System.out.print("else\n\t");
-			else_stmt.print();
+			System.out.println(indent + "else");
+			else_stmt.print(indent + "    ");
 		}
 	}
 }

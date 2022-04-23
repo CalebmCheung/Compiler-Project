@@ -9,13 +9,12 @@ public class VarExpr extends Expr {
         bracketExpr = e;
     }
 
-    public void print(){
-        System.out.print(ID);
+    public void print(String indent){
+        System.out.print(indent + ID);
         if(bracketExpr != null){
             System.out.print("[ ");
-            bracketExpr.print();
-            System.out.println(" ]");
+            bracketExpr.print("");
+            System.out.print(" ]");
         }
-        System.out.println();
     }
 }

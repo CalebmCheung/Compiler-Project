@@ -7,9 +7,9 @@ public class exprStatement extends Statement {
         expr = e;
     }
 
-    public void print(){
-        expr.print();
-        System.out.println(";");
+    public void print(String indent){
+        expr.print(indent + "    ");
+        //System.out.println(";");
     }
 }
 

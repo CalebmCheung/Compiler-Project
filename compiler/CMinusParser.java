@@ -8,7 +8,7 @@ import java.util.ArrayList;
 // all parse methods should be static
 public class CMinusParser {
     public static void main(String[] args) throws parserErrorException {
-        CMinusParser myParser = new CMinusParser("compilerTests/test_2.txt");
+        CMinusParser myParser = new CMinusParser("compilerTests/test_1.txt");
     }
 
     CMinusScanner myScanner;
@@ -27,7 +27,7 @@ public class CMinusParser {
             nextToken = token.getToken();
         }
         p = parseProgram();
-        p.print();
+        p.print("");
     }
 
     private static void advanceToken() {
@@ -78,7 +78,7 @@ public class CMinusParser {
                 return parseDeclPrime(type, id);
             }
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseDecl()");
+            throw new parserErrorException("bad token in parseDecl()" + currentToken.getType());
         }
     }
 
@@ -118,7 +118,7 @@ public class CMinusParser {
             return new FunDecl(id, type, params, cmpd_stmt);
 
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseFunDecl()");
+            throw new parserErrorException("bad token in parseFunDecl()"+ currentToken.getType());
         }
     }
 
@@ -138,7 +138,7 @@ public class CMinusParser {
                 return new VarDecl(type, id, true, num);
             }
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseVarDecl()");
+            throw new parserErrorException("bad token in parseVarDecl()"+ currentToken.getType());
         }
     }
 
@@ -157,7 +157,7 @@ public class CMinusParser {
                 return new Param(id, false);
             }
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseParam()");
+            throw new parserErrorException("bad token in parseParam()"+ currentToken.getType());
         }
     }
 
@@ -169,7 +169,7 @@ public class CMinusParser {
             matchToken(token.Token_type.CLOSE_CURLY_TOKEN);
             return new compoundStatement(localDecls, stmtList);
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseCompoundStatement()");
+            throw new parserErrorException("bad token in parseCompoundStatement()"+ currentToken.getType());
         }
     }
 
@@ -187,7 +187,7 @@ public class CMinusParser {
             }
             return varDecls;
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseLocalDecl()");
+            throw new parserErrorException("bad token in parseLocalDecl()"+ currentToken.getType());
         }
     }
 
@@ -216,7 +216,7 @@ public class CMinusParser {
             return parseSelectionStatement();
         } else if (currentToken.getType() == token.Token_type.WHILE_TOKEN) {
             return parseIterationStatement();
-        } else if (currentToken.getType() == token.Token_type.INTEGER_TOKEN) {
+        } else if (currentToken.getType() == token.Token_type.OPEN_CURLY_TOKEN) {
             return parseCompoundStatement();
         } else if (currentToken.getType() == token.Token_type.RETURN_TOKEN) {
             return parseReturnStatement();
@@ -234,7 +234,7 @@ public class CMinusParser {
             matchToken(token.Token_type.SEMI_COLON_TOKEN);
             return new exprStatement(expr);
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseExprStatment()");
+            throw new parserErrorException("bad token in parseExprStatment()"+ currentToken.getType());
         }
     }
 
@@ -252,7 +252,7 @@ public class CMinusParser {
             }
             return new selectionStatement(expr, stmt, eStmt);
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseSelectionStatement()");
+            throw new parserErrorException("bad token in parseSelectionStatement()"+ currentToken.getType());
         }
     }
 
@@ -266,7 +266,7 @@ public class CMinusParser {
 
             return new iterationStatement(expr, stmt);
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseIterationStatement()");
+            throw new parserErrorException("bad token in parseIterationStatement()"+ currentToken.getType());
         }
     }
 
@@ -280,7 +280,7 @@ public class CMinusParser {
             matchToken(token.Token_type.SEMI_COLON_TOKEN);
             return new returnStatement(expr);
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseReturnStatment()");
+            throw new parserErrorException("bad token in parseReturnStatment()"+ currentToken.getType());
         }
     }
 
@@ -302,7 +302,7 @@ public class CMinusParser {
                 return parseSimpleExpressionPrime(expr);
             }
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseExpression()");
+            throw new parserErrorException("bad token in parseExpression()"+ currentToken.getType());
         }
     }
 
@@ -345,9 +345,9 @@ public class CMinusParser {
                 VarExpr vExpr = new VarExpr(ID, null);
                 return parseSimpleExpressionPrime(vExpr);
             }
-            throw new parserErrorException("incorrect token for parseExpressionPrime()");
+            throw new parserErrorException("incorrect token for parseExpressionPrime()"+ currentToken.getType());
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseExpressionPrime()");
+            throw new parserErrorException("bad token in parseExpressionPrime()"+ currentToken.getType());
         }
     }
 
@@ -374,7 +374,7 @@ public class CMinusParser {
                 || currentToken.getType() == token.Token_type.CLOSE_BRACKET_TOKEN) {
             return parseSimpleExpressionPrime(vExpr);
         } else {
-            throw new parserErrorException("bad token in parseExpressionPrimePrime");
+            throw new parserErrorException("bad token in parseExpressionPrimePrime"+ currentToken.getType());
         }
     }
 
@@ -474,10 +474,10 @@ public class CMinusParser {
                 advanceToken();
                 return new NumExpr(num);
             } else {
-                throw new parserErrorException("bad token in parseFactor()");
+                throw new parserErrorException("bad token in parseFactor()"+ currentToken.getType());
             }
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseFactor()");
+            throw new parserErrorException("bad token in parseFactor()"+ currentToken.getType());
         }
     }
 
@@ -493,12 +493,30 @@ public class CMinusParser {
                 Expr expr = parseExpression();
                 matchToken(token.Token_type.CLOSE_BRACKET_TOKEN);
                 return new VarExpr(ID, expr);
-            } else {
+            } else if (currentToken.getType() == token.Token_type.IDENTIFIER_TOKEN
+                    ||currentToken.getType() == token.Token_type.NUMBER_TOKEN
+                    || currentToken.getType() == token.Token_type.CLOSE_PAREN_TOKEN
+                    || currentToken.getType() == Token_type.LESS_THAN_TOKEN
+                    || currentToken.getType() == Token_type.LESS_THAN_OR_EQUAL_TOKEN
+                    || currentToken.getType() == Token_type.GREATER_THAN_TOKEN
+                    || currentToken.getType() == Token_type.GREATER_THAN_OR_EQUAL_TOKEN
+                    || currentToken.getType() == Token_type.EQUALITY_TOKEN
+                    || currentToken.getType() == Token_type.NONEQUALITY_TOKEN
+                    || currentToken.getType() == token.Token_type.MULTIPLY_TOKEN
+                    || currentToken.getType() == token.Token_type.DIVIDE_TOKEN
+                    || currentToken.getType() == token.Token_type.PLUS_TOKEN
+                    || currentToken.getType() == token.Token_type.MINUS_TOKEN
+                    || currentToken.getType() == token.Token_type.SEMI_COLON_TOKEN
+                    || currentToken.getType() == token.Token_type.COMMA_TOKEN
+                    || currentToken.getType() == token.Token_type.CLOSE_BRACKET_TOKEN){
+                return new VarExpr(ID, null);
+            }
+            else {
                 //Check for follow set of factor and return varExpr
-                throw new parserErrorException("Error in parseVarCall");
+                throw new parserErrorException("Error in parseVarCall"+ currentToken.getType());
             }
         } catch (matchTokenException e) {
-            throw new parserErrorException("bad token in parseVarCall()");
+            throw new parserErrorException("bad token in parseVarCall()"+ currentToken.getType());
         }
     }
 
@@ -516,6 +534,7 @@ public class CMinusParser {
         ArrayList<Expr> argList = new ArrayList<Expr>();
         argList.add(parseExpression());
         while (currentToken.getType() == Token_type.COMMA_TOKEN) {
+            advanceToken();
             argList.add(parseExpression());
         }
         return argList;

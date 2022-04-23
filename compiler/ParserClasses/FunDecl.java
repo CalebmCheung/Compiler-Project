@@ -17,14 +17,15 @@ public class FunDecl extends Decl{
         cmpd_stmt = c;
     }
 
-    public void print(){
-        System.out.print(type + " " + ID + "(");
+    public void print(String indent){
+        System.out.print(indent + type + " " + ID + "(");
         for (int i = 0; i < params.size(); i++){
             params.get(i).print();
-            System.out.print(",");
+            if(i < params.size()-1){
+                System.out.print(",");
+            }
         }
         System.out.println(")");
-        System.out.println("\t");
-        cmpd_stmt.print();
+        cmpd_stmt.print(indent + "    ");
     }
 }

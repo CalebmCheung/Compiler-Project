@@ -11,16 +11,18 @@ public class compoundStatement extends Statement {
         stmt_list = s;
     }
 
-    public void print(){
+    public void print(String indent){
+        System.out.println(indent + "{");
         if(local_decls.size() > 0){
             for(int i = 0; i < local_decls.size(); i++){
-                local_decls.get(i).print();
+                local_decls.get(i).print(indent + "    ");
             }
         }
         if(stmt_list.size() > 0){
             for(int i = 0; i < stmt_list.size(); i++){
-                stmt_list.get(i).print();
+                stmt_list.get(i).print(indent + "    ");
             }
         }
+        System.out.println(indent + "}");
     }
 }
