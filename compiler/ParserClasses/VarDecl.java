@@ -1,5 +1,7 @@
 package compiler.ParserClasses;
 
+import compiler.compiler.CMinusCompiler;
+import compiler.lowlevel.CodeItem;
 import compiler.token.Token_type;
 
 public class VarDecl extends Decl {
@@ -21,5 +23,12 @@ public class VarDecl extends Decl {
             System.out.print( "[" + number + "]");
         }
         System.out.println();
+    }
+
+    public void genLLCode(){
+        // check to see if var is a global var
+        if(CMinusCompiler.globalHash.containsKey(ID)){
+            
+        }
     }
 }

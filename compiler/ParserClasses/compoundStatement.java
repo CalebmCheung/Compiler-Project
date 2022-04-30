@@ -2,6 +2,8 @@ package compiler.ParserClasses;
 
 import java.util.ArrayList;
 
+import compiler.lowlevel.*;
+
 public class compoundStatement extends Statement {
     public ArrayList<VarDecl> local_decls;
     public ArrayList<Statement> stmt_list;
@@ -24,5 +26,18 @@ public class compoundStatement extends Statement {
             }
         }
         System.out.println(indent + "}");
+    }
+
+    public void genLLCode(Function func){
+        
+        /*
+
+        while localdecls
+            call vardecl?
+        */
+
+        for(int i = 0; i < stmt_list.size(); i++){
+            stmt_list.get(i).genLLCode(func);
+        }
     }
 }

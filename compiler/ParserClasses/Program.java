@@ -2,6 +2,8 @@ package compiler.ParserClasses;
 
 import java.util.ArrayList;
 
+import compiler.lowlevel.CodeItem;
+
 public class Program {
     public ArrayList<Decl> decList;
 
@@ -15,5 +17,11 @@ public class Program {
             decList.get(i).print(indent + "    ");
             System.out.println();
         }
+    }
+
+    public CodeItem genLLCode(){
+        CodeItem c = decList.genLLCode();
+
+        return c;
     }
 }

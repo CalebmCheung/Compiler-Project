@@ -50,7 +50,7 @@ public class CMinusParser {
         }
     }
 
-    private static Program parseProgram() throws parserErrorException {
+    public static Program parseProgram() throws parserErrorException {
         Program p = new Program();
         p.decList.add(parseDecl());
         while (currentToken.getType() != token.Token_type.EOF_TOKEN) {

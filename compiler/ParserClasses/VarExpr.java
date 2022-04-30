@@ -1,4 +1,8 @@
 package compiler.ParserClasses;
+import compiler.lowlevel.*;
+import compiler.lowlevel.Operand.OperandType;
+import compiler.lowlevel.Operation.OperationType;
+import compiler.compiler.CMinusCompiler;
 
 public class VarExpr extends Expr {
     public String ID;
@@ -15,6 +19,21 @@ public class VarExpr extends Expr {
             System.out.print("[ ");
             bracketExpr.print("");
             System.out.print(" ]");
+        }
+    }
+
+    public void genLLCode(Function func){
+        if(CMinusCompiler.globalHash.containsKey(ID)){
+            regNum = CMinusCompiler.globalHash.get(ID);
+            // create load
+            Operation op = new Operation(OperationType.LOAD_I, func.getCurrBlock());
+            func.getCurrBlock().appendOper(op);
+        }
+        else {
+            // mov into register
+            Operation op = new Operation(OperationType.ASSIGN, func.getCurrBlock());
+            func.getCurrBlock().appendOper(op);
+            regNum = func.getNewRegNum();
         }
     }
 }

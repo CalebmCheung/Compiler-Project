@@ -2,6 +2,7 @@ package compiler.ParserClasses;
 
 import java.util.ArrayList;
 
+import compiler.lowlevel.*;
 import compiler.token.Token_type;
 
 public class FunDecl extends Decl{
@@ -27,5 +28,28 @@ public class FunDecl extends Decl{
         }
         System.out.println(")");
         cmpd_stmt.print(indent + "    ");
+    }
+
+    public CodeItem genLLCode(){
+        int temp;
+        if(type == Token_type.VOID_TOKEN){
+            temp = 0;
+        }
+        else{
+            temp = 1;
+        }
+        Function newFun = new Function(1, ID);
+        newFun.createBlock0();
+        
+        // create block 1
+        BasicBlock block1 = new BasicBlock(newFun);
+        block1.setPrevBlock(newFun.getCurrBlock());
+        newFun.getCurrBlock().setNextBlock(block1);
+        newFun.setCurrBlock(block1);
+
+
+        // do params
+
+        cmpd_stmt.genLLCode(newFun);
     }
 }
