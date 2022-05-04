@@ -23,7 +23,7 @@ public class VarExpr extends Expr {
     }
 
     public void genLLCode(Function func){
-        if(CMinusCompiler.globalHash.containsKey(ID)){
+    /*    if(CMinusCompiler.globalHash.containsKey(ID)){
             regNum = CMinusCompiler.globalHash.get(ID);
             // create load
             Operation op = new Operation(OperationType.LOAD_I, func.getCurrBlock());
@@ -34,6 +34,6 @@ public class VarExpr extends Expr {
             Operation op = new Operation(OperationType.ASSIGN, func.getCurrBlock());
             func.getCurrBlock().appendOper(op);
             regNum = func.getNewRegNum();
-        }
+        }*/
     }
 }

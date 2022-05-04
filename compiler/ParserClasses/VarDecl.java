@@ -1,7 +1,8 @@
 package compiler.ParserClasses;
 
-import compiler.compiler.CMinusCompiler;
-import compiler.lowlevel.CodeItem;
+import compiler.lowlevel.*;
+import compiler.lowlevel.Operation.OperationType;
+import compiler.compiler.*;
 import compiler.token.Token_type;
 
 public class VarDecl extends Decl {
@@ -25,10 +26,33 @@ public class VarDecl extends Decl {
         System.out.println();
     }
 
-    public void genLLCode(){
-        // check to see if var is a global var
+    public void genLLCode(Function func){
         if(CMinusCompiler.globalHash.containsKey(ID)){
-            
+            regNum = CMinusCompiler.globalHash.get(ID);
+            // create load
+            Operation op = new Operation(OperationType.LOAD_I, func.getCurrBlock());
+            func.getCurrBlock().appendOper(op);
+        }
+        else {
+            // mov into register
+            Operation op = new Operation(OperationType.ASSIGN, func.getCurrBlock());
+            func.getCurrBlock().appendOper(op);
+            number = func.getNewRegNum();
+        }
+    }
+
+    public void genLLCode(){
+        
+        if(type == Token_type.VOID_TOKEN){
+            Data data = new Data(0, ID);
+        }
+        else{
+            Data data = new Data(0, ID);
+        }
+
+        if(!CMinusCompiler.globalHash.containsKey(ID)){
+            tempSize = CMinusCompiler.globalHash.size() + 1;
+            CMinusCompiler.globalHash.put(ID, tempSize);
         }
     }
 }

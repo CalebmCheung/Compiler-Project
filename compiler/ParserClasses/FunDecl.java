@@ -30,7 +30,7 @@ public class FunDecl extends Decl{
         cmpd_stmt.print(indent + "    ");
     }
 
-    public CodeItem genLLCode(){
+    public void genLLCode(){
         int temp;
         if(type == Token_type.VOID_TOKEN){
             temp = 0;
