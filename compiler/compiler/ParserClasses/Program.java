@@ -1,4 +1,4 @@
-package compiler.ParserClasses;
+package compiler.compiler.ParserClasses;
 
 import java.util.ArrayList;
 
@@ -20,8 +20,15 @@ public class Program {
     }
 
     public CodeItem genLLCode(){
-        CodeItem c = decList.genLLCode();
-
+        CodeItem c = decList.get(0).genLLCode();
+        if(decList.size() > 1){
+            for(int i = 1; i < decList.size(); i++){
+                CodeItem prevCodeItem = c;
+                c = decList.get(i).genLLCode();
+                prevCodeItem.setNextItem(c);
+            }
+        }
+        
         return c;
     }
 }

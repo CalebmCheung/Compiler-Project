@@ -1,4 +1,4 @@
-package compiler;
+package compiler.compiler;
 import java.lang.Character;
 
 public class token {

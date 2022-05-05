@@ -1,7 +1,7 @@
-package compiler;
+package compiler.compiler;
 
-import compiler.ParserClasses.*;
-import compiler.token.Token_type;
+import compiler.compiler.ParserClasses.*;
+import compiler.compiler.token.Token_type;
 
 import java.util.ArrayList;
 
@@ -26,8 +26,8 @@ public class CMinusParser {
         while (nextToken.getType() == Token_type.DEFAULT_TOKEN) {
             nextToken = token.getToken();
         }
-        p = parseProgram();
-        p.print("");
+        //p = parseProgram();
+        //p.print("");
     }
 
     private static void advanceToken() {

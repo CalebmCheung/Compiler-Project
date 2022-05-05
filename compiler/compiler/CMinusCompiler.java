@@ -1,9 +1,7 @@
 package compiler.compiler;
 
 import compiler.x64codegen.X64AssemblyGenerator;
-import compiler.CMinusParser;
-import compiler.parserErrorException;
-import compiler.ParserClasses.Program;
+import compiler.compiler.ParserClasses.Program;
 import compiler.lowlevel.*;
 import java.util.*;
 import java.io.*;
@@ -14,7 +12,7 @@ import compiler.dataflow.*;
 
 public class CMinusCompiler implements Compiler {
 
-    public static HashMap<String, Integer> globalHash = new HashMap<String, Integer>();
+    public static HashMap<String, String> globalHash = new HashMap<String, String>();
     private static boolean genX64Code = false;
 
     public CMinusCompiler() {
@@ -29,7 +27,7 @@ public class CMinusCompiler implements Compiler {
 
     public void compile(String filePrefix) {
 
-        String fileName = filePrefix + ".c";
+        String fileName = filePrefix + ".txt";
         try {
             CMinusParser myParser = new CMinusParser(fileName);
 
@@ -122,12 +120,13 @@ public class CMinusCompiler implements Compiler {
             }
 
         } catch (IOException|parserErrorException ioe) {
+            ioe.printStackTrace();
         }
 
     }
 
     public static void main(String[] args) {
-        String filePrefix = "test5";
+        String filePrefix = "simpleTest";
         CMinusCompiler myCompiler = new CMinusCompiler();
         myCompiler.setGenX64Code(true);
         myCompiler.compile(filePrefix);

@@ -2,6 +2,8 @@ package compiler.lowlevel;
 
 import java.io.*;
 import java.util.*;
+
+import compiler.compiler.CodeGenerationException;
 import compiler.dataflow.BitArraySet;
 
 /**
@@ -291,7 +293,7 @@ public class BasicBlock {
   }
 
     // prints the BB, then calls printLLCode on each Operation in the block
-  public void printLLCode(PrintWriter outFile) {
+  public void printLLCode(PrintWriter outFile) throws CodeGenerationException {
 
     if (outFile == null) {
       System.out.println("  (BB " + this.getBlockNum());

@@ -1,4 +1,4 @@
-package compiler;
+package compiler.compiler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,10 +21,10 @@ public class CMinusScanner {
 
     public static void main(String []args) {
         // test non flex scanner in progress
-        String inFile = "./compilerTests/test_2.txt";
-        String outFile = "./compilerTests/out_test_2.txt";
+        //String inFile = "./compilerTests/test_2.txt";
+        //String outFile = "./compilerTests/out_test_2.txt";
 
-        CMinusScanner myScanner = new CMinusScanner(inFile, outFile);
+        //CMinusScanner myScanner = new CMinusScanner(inFile, outFile);
 
         // use to write to file
         // myScanner.Scan();
@@ -49,15 +49,7 @@ public class CMinusScanner {
     }
 
     public CMinusScanner (String inFile) {
-        // will error if you try to run scan with this constructor
-        try{
-            is = new FileInputStream(inFile);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-        }
-        catch(FileNotFoundException e){
-            System.out.println("File Not Found");
-        }
+        this(inFile, (inFile + ".out.txt"));
     }
 
     public void Close(){

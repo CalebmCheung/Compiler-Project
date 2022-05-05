@@ -1,4 +1,6 @@
-package compiler.ParserClasses;
+package compiler.compiler.ParserClasses;
+
+import compiler.lowlevel.Function;
 
 public class selectionStatement extends Statement {
 	public Expr expr;
@@ -20,5 +22,11 @@ public class selectionStatement extends Statement {
 			System.out.println(indent + "else");
 			else_stmt.print(indent + "    ");
 		}
+	}
+
+	@Override
+	public void genLLCode(Function func) {
+		// TODO Auto-generated method stub
+		
 	}
 }

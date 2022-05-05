@@ -1,9 +1,11 @@
-package compiler.ParserClasses;
+package compiler.compiler.ParserClasses;
 
 import java.util.ArrayList;
 
 import compiler.lowlevel.*;
-import compiler.token.Token_type;
+import compiler.lowlevel.Operand.OperandType;
+import compiler.lowlevel.Operation.OperationType;
+import compiler.compiler.token.Token_type;
 
 public class FunDecl extends Decl{
     public String ID;
@@ -30,7 +32,7 @@ public class FunDecl extends Decl{
         cmpd_stmt.print(indent + "    ");
     }
 
-    public void genLLCode(){
+    public Function genLLCode(){
         int temp;
         if(type == Token_type.VOID_TOKEN){
             temp = 0;
@@ -38,8 +40,9 @@ public class FunDecl extends Decl{
         else{
             temp = 1;
         }
-        Function newFun = new Function(1, ID);
+        Function newFun = new Function(temp, ID);
         newFun.createBlock0();
+        newFun.setCurrBlock(newFun.getLastBlock());
         
         // create block 1
         BasicBlock block1 = new BasicBlock(newFun);
@@ -47,9 +50,17 @@ public class FunDecl extends Decl{
         newFun.getCurrBlock().setNextBlock(block1);
         newFun.setCurrBlock(block1);
 
-
-        // do params
+        for(int i = 0; i < params.size(); i++){
+            params.get(i).genLLCode(newFun);
+        }
 
         cmpd_stmt.genLLCode(newFun);
+
+        Operation op = new Operation(OperationType.FUNC_EXIT, newFun.getCurrBlock());
+
+        newFun.getCurrBlock().appendOper(op);
+        
+
+        return newFun;
     }
 }

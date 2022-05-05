@@ -1,4 +1,4 @@
-package compiler;
+package compiler.compiler;
 
 public class parserErrorException extends Exception {
     public parserErrorException (String message){

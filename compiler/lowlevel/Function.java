@@ -2,6 +2,8 @@ package compiler.lowlevel;
 
 import java.util.*;
 import java.io.*;
+
+import compiler.compiler.CodeGenerationException;
 import compiler.dataflow.BitArraySet;
 
 /**
@@ -493,38 +495,42 @@ public class Function extends CodeItem {
 /***************************************************************************/
     // recursive routine which prints the function information
   public void printLLCode(PrintWriter outFile) {
-    if (outFile == null) {
-      System.out.print("(FUNCTION  " + getName() + "  [");
-      for (FuncParam curr = firstParam; curr != null; curr = curr.getNextParam()) {
-        if (curr != firstParam) {
-          System.out.print(" ");
+    try {
+      if (outFile == null) {
+        System.out.print("(FUNCTION  " + getName() + "  [");
+        for (FuncParam curr = firstParam; curr != null; curr = curr.getNextParam()) {
+          if (curr != firstParam) {
+            System.out.print(" ");
+          }
+          System.out.print("(" + curr.printType() + " " + curr.getName() + ")");
         }
-        System.out.print("(" + curr.printType() + " " + curr.getName() + ")");
-      }
-      System.out.println("]");
-      for (BasicBlock curr = firstBlock; curr != null; curr=curr.getNextBlock()) {
-        curr.printLLCode(outFile);
-      }
-      System.out.println(")");
-    }
-    else {
-      outFile.print("(FUNCTION  " + getName() + "  [");
-      for (FuncParam curr = firstParam; curr != null; curr = curr.getNextParam()) {
-        if (curr != firstParam) {
-          outFile.print(" ");
+        System.out.println("]");
+        for (BasicBlock curr = firstBlock; curr != null; curr=curr.getNextBlock()) {
+          curr.printLLCode(outFile);
         }
-        outFile.print("(" + curr.printType() + " " + curr.getName() + ")");
+        System.out.println(")");
       }
-      outFile.println("]");
-      for (BasicBlock curr = firstBlock; curr != null; curr=curr.getNextBlock()) {
-        curr.printLLCode(outFile);
+      else {
+        outFile.print("(FUNCTION  " + getName() + "  [");
+        for (FuncParam curr = firstParam; curr != null; curr = curr.getNextParam()) {
+          if (curr != firstParam) {
+            outFile.print(" ");
+          }
+          outFile.print("(" + curr.printType() + " " + curr.getName() + ")");
+        }
+        outFile.println("]");
+        for (BasicBlock curr = firstBlock; curr != null; curr=curr.getNextBlock()) {
+          curr.printLLCode(outFile);
+        }
+        outFile.println(")");
       }
-      outFile.println(")");
-    }
 
-    if (this.getNextItem() != null) {
-      this.getNextItem().printLLCode(outFile);
+      if (this.getNextItem() != null) {
+        this.getNextItem().printLLCode(outFile);
+      }
+    }
+    catch(CodeGenerationException e){
+      System.out.print("code Gen Except: " + e);
     }
   }
-
 }

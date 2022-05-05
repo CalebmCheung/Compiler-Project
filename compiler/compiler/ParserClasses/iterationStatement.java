@@ -1,4 +1,6 @@
-package compiler.ParserClasses;
+package compiler.compiler.ParserClasses;
+
+import compiler.lowlevel.Function;
 
 public class iterationStatement extends Statement {
     public Expr expr;
@@ -13,5 +15,11 @@ public class iterationStatement extends Statement {
         expr.print("");
         System.out.println(") ");
         stmt.print(indent + "    ");
+    }
+
+    @Override
+    public void genLLCode(Function func) {
+        // TODO Auto-generated method stub
+        
     }
 }

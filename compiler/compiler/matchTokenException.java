@@ -1,4 +1,4 @@
-package compiler;
+package compiler.compiler;
 
 public class matchTokenException extends Exception{
     public matchTokenException (String message){
